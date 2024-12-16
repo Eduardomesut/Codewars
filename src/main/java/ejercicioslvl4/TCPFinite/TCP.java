@@ -8,29 +8,6 @@ public class TCP {
 
     public static String traverseStates(String[] events) {
 
-     /* CLOSED: APP_PASSIVE_OPEN -> LISTEN
-        CLOSED: APP_ACTIVE_OPEN  -> SYN_SENT
-        LISTEN: RCV_SYN          -> SYN_RCVD
-        LISTEN: APP_SEND         -> SYN_SENT
-        LISTEN: APP_CLOSE        -> CLOSED
-        SYN_RCVD: APP_CLOSE      -> FIN_WAIT_1
-        SYN_RCVD: RCV_ACK        -> ESTABLISHED
-        SYN_SENT: RCV_SYN        -> SYN_RCVD
-        SYN_SENT: RCV_SYN_ACK    -> ESTABLISHED
-        SYN_SENT: APP_CLOSE      -> CLOSED
-        ESTABLISHED: APP_CLOSE   -> FIN_WAIT_1
-        ESTABLISHED: RCV_FIN     -> CLOSE_WAIT
-        FIN_WAIT_1: RCV_FIN      -> CLOSING
-        FIN_WAIT_1: RCV_FIN_ACK  -> TIME_WAIT
-        FIN_WAIT_1: RCV_ACK      -> FIN_WAIT_2
-        CLOSING: RCV_ACK         -> TIME_WAIT
-        FIN_WAIT_2: RCV_FIN      -> TIME_WAIT
-        TIME_WAIT: APP_TIMEOUT   -> CLOSED
-        CLOSE_WAIT: APP_CLOSE    -> LAST_ACK
-        LAST_ACK: RCV_ACK        -> CLOSED
-
-     */
-
 
         String[] estadosPosibles = {"APP_PASSIVE_OPEN", "APP_ACTIVE_OPEN", "APP_SEND", "APP_CLOSE", "APP_TIMEOUT",
                 "RCV_SYN", "RCV_ACK", "RCV_SYN_ACK", "RCV_FIN", "RCV_FIN_ACK"};
@@ -58,17 +35,130 @@ public class TCP {
 
             if (evento.equals("APP_PASSIVE_OPEN")) {
                 if (estado.equals("CLOSED")) {
+                    String[] resultadoACIERTO = {"ACIERTO", "LISTEN"};
+                    return resultadoACIERTO;
                     
                 }else{
                     
                     return resultadoERROR;
                 }
+            }else if (evento.equals("APP_ACTIVE_OPEN")) {
+                if (estado.equals("CLOSED")) {
+                    String[] resultadoACIERTO = {"ACIERTO", "SYN_SENT"};
+                    return resultadoACIERTO;
+                    
+                }else{
+                    
+                    return resultadoERROR;
+                }     
+            }else if (evento.equals("RCV_SYN")) {
+                if (estado.equals("LISTEN")) {
+                    String[] resultadoACIERTO = {"ACIERTO", "SYN_RCVD"};
+                    return resultadoACIERTO;
+                    
+                }else if (estado.equals("SYN_SENT")) {
+                    String[] resultadoACIERTO = {"ACIERTO", "SYN_RCVD"};
+                    return resultadoACIERTO;
+                } else{
+                    
+                    return resultadoERROR;
+                }     
+            }else if (evento.equals("APP_SEND")) {
+                if (estado.equals("LISTEN")) {
+                    String[] resultadoACIERTO = {"ACIERTO", "SYN_SENT"};
+                    return resultadoACIERTO;
+                    
+                }else{
+                    
+                    return resultadoERROR;
+                }     
+            }else if (evento.equals("APP_CLOSE")) {
+                if (estado.equals("LISTEN")) {
+                    String[] resultadoACIERTO = {"ACIERTO", "CLOSED"};
+                    return resultadoACIERTO;
+                    
+                }else if (estado.equals("SYN_RCVD")) {
+                    String[] resultadoACIERTO = {"ACIERTO", "FIN_WAIT_1"};
+                    return resultadoACIERTO;
+                }else if (estado.equals("SYN_SENT")) {
+                    String[] resultadoACIERTO = {"ACIERTO", "CLOSED"};
+                    return resultadoACIERTO;
+                }else if (estado.equals("ESTABLISHED")) {
+                    String[] resultadoACIERTO = {"ACIERTO", "FIN_WAIT_1"};
+                    return resultadoACIERTO;
+                    
+                }else if (estado.equals("CLOSE_WAIT")) {
+                    String[] resultadoACIERTO = {"ACIERTO", "LAST_ACK"};
+                    return resultadoACIERTO;
+                    
+                }else{
+                    
+                    return resultadoERROR;
+                }     
+            }else if (evento.equals("RCV_ACK")) {
+                if (estado.equals("SYN_RCVD")) {
+                    String[] resultadoACIERTO = {"ACIERTO", "ESTABLISHED"};
+                    return resultadoACIERTO;
+                    
+                }else if (estado.equals("FIN_WAIT_1")) {
+                    String[] resultadoACIERTO = {"ACIERTO", "FIN_WAIT_2"};
+                    return resultadoACIERTO;
+                }else if (estado.equals("CLOSING")) {
+                    String[] resultadoACIERTO = {"ACIERTO", "TIME_WAIT"};
+                    return resultadoACIERTO;
+                }else if (estado.equals("LAST_ACK")) {
+                    String[] resultadoACIERTO = {"ACIERTO", "CLOSED"};
+                    return resultadoACIERTO;
+                } else{
+                    
+                    return resultadoERROR;
+                }     
+            }else if (evento.equals("RCV_SYN_ACK")) {
+                if (estado.equals("SYN_SENT")) {
+                    String[] resultadoACIERTO = {"ACIERTO", "ESTABLISHED"};
+                    return resultadoACIERTO;
+                    
+                }else{
+                    
+                    return resultadoERROR;
+                }     
+            }else if (evento.equals("RCV_FIN")) {
+                if (estado.equals("ESTABLISHED")) {
+                    String[] resultadoACIERTO = {"ACIERTO", "CLOSE_WAIT"};
+                    return resultadoACIERTO;
+                    
+                }else if (estado.equals("FIN_WAIT_1")) {
+                    
+                     String[] resultadoACIERTO = {"ACIERTO", "CLOSING"};
+                    return resultadoACIERTO;       
+                }else if (estado.equals("FIN_WAIT_2")) {
+                    
+                     String[] resultadoACIERTO = {"ACIERTO", "TIME_WAIT"};
+                    return resultadoACIERTO;       
+                } else{
+                    
+                    return resultadoERROR;
+                }     
+            }else if (evento.equals("RCV_FIN_ACK")) {
+                if (estado.equals("FIN_WAIT_1")) {
+                    String[] resultadoACIERTO = {"ACIERTO", "TIME_WAIT"};
+                    return resultadoACIERTO;
+                    
+                }else{
+                    
+                    return resultadoERROR;
+                }     
+            }else if (evento.equals("APP_TIMEOUT")) {
+                if (estado.equals("TIME_WAIT")) {
+                    String[] resultadoACIERTO = {"ACIERTO", "CLOSED"};
+                    return resultadoACIERTO;
+                    
+                }else{
+                    
+                    return resultadoERROR;
+                }     
             }
-            
- 
 
-
-           
             return resultadoERROR;
         }else {
             
@@ -77,10 +167,4 @@ public class TCP {
 
     }
 
-    public static void main(String[] args) {
-
-        String[]casos = {"APP_PASSIVE_OPEN", "RCV_SYN","RCV_ACK"};
-        System.out.println(traverseStates(casos));
-
-    }
 }
