@@ -8,7 +8,7 @@ public class TCP {
 
     public static String traverseStates(String[] events) {
 
-       /* CLOSED: APP_PASSIVE_OPEN -> LISTEN
+     /* CLOSED: APP_PASSIVE_OPEN -> LISTEN
         CLOSED: APP_ACTIVE_OPEN  -> SYN_SENT
         LISTEN: RCV_SYN          -> SYN_RCVD
         LISTEN: APP_SEND         -> SYN_SENT
@@ -29,7 +29,7 @@ public class TCP {
         CLOSE_WAIT: APP_CLOSE    -> LAST_ACK
         LAST_ACK: RCV_ACK        -> CLOSED
 
-        */
+     */
 
 
         String[] estadosPosibles = {"APP_PASSIVE_OPEN", "APP_ACTIVE_OPEN", "APP_SEND", "APP_CLOSE", "APP_TIMEOUT",
@@ -53,17 +53,26 @@ public class TCP {
     }
 
     public static String[] tratarEstado(String evento, String[]estadosPosibles, String estado) {
-
+       String[] resultadoERROR = {"ERROR", "ERROR"};
         if (Arrays.stream(estadosPosibles).anyMatch(Predicate.isEqual(evento))){
 
+            if (evento.equals("APP_PASSIVE_OPEN")) {
+                if (estado.equals("CLOSED")) {
+                    
+                }else{
+                    
+                    return resultadoERROR;
+                }
+            }
+            
+ 
 
 
-
-            String[] resultado = {"ERROR", "ERROR"};
-            return resultado;
+           
+            return resultadoERROR;
         }else {
-            String[] resultado = {"ERROR", "ERROR"};
-            return resultado;
+            
+            return resultadoERROR;
         }
 
     }
