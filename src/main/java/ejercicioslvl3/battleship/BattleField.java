@@ -9,10 +9,23 @@ public class BattleField {
 
         for (int filas = 0; filas < field.length; filas++) {
             for (int columnas = 0; columnas < field[filas].length; columnas++) {
+                
 
                 if (field[filas][columnas] == 1){
                     if (filas == 0 && columnas == 0){
-
+                        if (field[1][1] == 1) {
+                            return false;
+                        }else if (field[0][1] == 1) {
+                            if (field[1][0] == 1) {
+                                return false;
+                            }
+                            
+                        }else if(field[1][0] == 1){
+                            if (field[0][1] == 1) {
+                                return false;
+                            }
+                        }
+                        
 
                     } else if (filas == 0 && columnas == field[filas].length - 1) {
 
