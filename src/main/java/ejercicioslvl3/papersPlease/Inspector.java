@@ -19,12 +19,20 @@ public class Inspector {
     private ArrayList<String> paisesProhibidos = new ArrayList<>();
     private ArrayList<String> buscados = new ArrayList<>();
     private ArrayList<String> documentosPedidos = new ArrayList<>();
+
     //CADUCIDAD
     String dateStr = "1933.11.28";
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
     LocalDate caducidad = LocalDate.parse(dateStr, formatter);
     //RESPUESTA
     Respuesta respuesta = new Respuesta();
+
+    //PAISES
+    ArrayList<String> todosPaises = new ArrayList<>();
+
+
+
+
 
     public void receiveBulletin(String bulletin) {
         String leyes[] = bulletin.split("\\\\n");
@@ -135,6 +143,7 @@ public class Inspector {
 
     public String inspect(Map<String, String> person) {
         ArrayList<String> documentosUsuario = new ArrayList<>();
+        llenarPaises();
         Persona verificado = new Persona();
         String respuestaFinal = "";
         for (Map.Entry<String, String> entry : person.entrySet()) {
@@ -199,28 +208,64 @@ public class Inspector {
     public void setDocumentosPedidos(ArrayList<String> documentosPedidos) {
         this.documentosPedidos = documentosPedidos;
     }
+    public void llenarPaises() {
+        // Agregar países al ArrayList
+        todosPaises.add("Arstotzka");
+        todosPaises.add("Antegria");
+        todosPaises.add("Impor");
+        todosPaises.add("Kolechia");
+        todosPaises.add("Obristan");
+        todosPaises.add("Republia");
+        todosPaises.add("United Federation");
+    }
 
     public String verificarDocumento(String value, Persona verificado) {
         
         if (value.contains("ID#:")) {
-            
-            
             if (verificado.id == null) {
-                verificado.id = value.substring(value.indexOf("ID#:") + 4, value.indexOf("ID#:") + 16);
+                verificado.id = value.substring(value.indexOf("ID#:") + 5, value.indexOf("ID#:") + 16);
             }else{
-                System.out.println(value.substring(value.indexOf("ID#:") + 4, value.indexOf("ID#:") + 16));
-                if (!(value.substring(value.indexOf("ID#:") + 4, value.indexOf("ID#:") + 16).equals(verificado.id))) {
-                    System.out.println();
-                    System.out.println("fdfdfdfdfd");
+                System.out.println(value.substring(value.indexOf("ID#:") + 5, value.indexOf("ID#:") + 16));
+                if (!(value.substring(value.indexOf("ID#:") + 5, value.indexOf("ID#:") + 16).equals(verificado.id))) {
                     return respuesta.detenerID;
                 }
-                
-                
+            }
+        }
+        if (value.contains("NATION:")){
+            if (verificado.nacion == null){
+                for (String pais: todosPaises) {
+                    if (value.contains(pais)){
+                        verificado.nacion = pais;
+                    }
+                }
+
+            }else {
+                for (String pais: todosPaises) {
+                    if (value.contains(pais)){
+                        if (!pais.equals(verificado.nacion)){
+                            return respuesta.detenerID;
+                        }
+                    }
+                }
             }
 
-        }
 
+        }
+        if (value.contains("NAME:")){
+            String datosNombre = value.substring(value.indexOf("NAME:") + 6);
+            String [] parteNombre = datosNombre.split("\\\n");
+            String nombre = parteNombre[0];
+            if (verificado.name == null){
+                verificado.name = nombre;
+            }else {
+                if (!verificado.name.equals(nombre)){
+                    return respuesta.detenerID;
+                }
+            }
+        }
         System.out.println(verificado.id);
+        System.out.println(verificado.nacion);
+        System.out.println(verificado.name);
         return "";
     }
 
