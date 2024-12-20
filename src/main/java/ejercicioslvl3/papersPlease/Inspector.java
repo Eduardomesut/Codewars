@@ -34,19 +34,50 @@ public class Inspector {
 
 
     public void receiveBulletin(String bulletin) {
-        String leyes[] = bulletin.split("\\\\n");
+        String leyes[] = bulletin.split("\\\n");
         for (int i = 0; i < leyes.length; i++) {
             if (leyes[i].startsWith("Allow citizens of")) {
-                String[] pais;
-                String paises = leyes[i].substring(18);
-                pais = paises.split(" ,");
-                Arrays.stream(pais).forEach(s -> getPaisesPermitidos().add(s));
 
-            } else if (leyes[i].startsWith("Deny citizens of")) {
+                String paises = leyes[i].substring(18);
+
+
+                String[] pais = paises.split(", ");
+
+
+                Arrays.stream(pais).forEach(s -> {
+                    String paisTrimmed = s.trim(); // Elimina espacios adicionales
+
+                    // Verifica si el país está en la lista de prohibidos
+                    if (getPaisesProhibidos().contains(paisTrimmed)) {
+                        // Eliminar de la lista de prohibidos
+                        getPaisesProhibidos().remove(paisTrimmed);
+
+                    }
+
+                    // Agregar a la lista de permitidos
+                    getPaisesPermitidos().add(paisTrimmed);
+
+                });
+            }
+
+             else if (leyes[i].startsWith("Deny citizens of")) {
                 String[] pais;
                 String paises = leyes[i].substring(17);
-                pais = paises.split(" ,");
-                Arrays.stream(pais).forEach(s -> getPaisesProhibidos().add(s));
+                pais = paises.split(", ");
+                Arrays.stream(pais).forEach(s -> {
+                    String paisTrimmed = s.trim(); // Elimina espacios adicionales
+
+                    // Verifica si el país está en la lista de prohibidos
+                    if (getPaisesPermitidos().contains(paisTrimmed)) {
+                        // Eliminar de la lista de prohibidos
+                        getPaisesPermitidos().remove(paisTrimmed);
+
+                    }
+
+                    // Agregar a la lista de permitidos
+                    getPaisesProhibidos().add(paisTrimmed);
+
+                });
             } else if (leyes[i].startsWith("Foreigners") || leyes[i].startsWith("Citizens") || leyes[i].startsWith("Workers") || leyes[i].startsWith("Entrants")) {
                 documentacionNecesaria(leyes[i]);
 
@@ -61,6 +92,15 @@ public class Inspector {
         //System.out.println(this.getBuscados());
         //System.out.println(this.getDocumentosPedidos());
         //System.out.println(this.getPaisesPermitidos());
+
+        ArrayList<String> paisesProhiNuevo = new ArrayList<>();
+        for (String paisNi:paisesProhibidos) {
+            if (!paisesPermitidos.contains(paisNi)){
+                paisesProhiNuevo.add(paisNi);
+            }
+        }
+        //this.paisesProhibidos = paisesProhiNuevo;
+        //System.out.println(paisesProhibidos);
     }
 
     private void documentacionNecesaria(String ley) {
@@ -197,6 +237,20 @@ public class Inspector {
         if (verificado.nacion.equals("Arstotzka") && verificado.documentosUsuario.contains("ID_card")) {
             respuestaFinal = respuesta.entradaGloriosa;
         }
+        if (this.getBuscados().contains(verificado.name)){
+            return respuesta.detenerCriminal;
+        }
+
+        for (String pais:paisesProhibidos) {
+
+            if (verificado.nacion.equals(pais)){
+                return "Entry denied: citizen of banned nation.";
+            }
+        }
+        if (!paisesPermitidos.contains(verificado.nacion)){
+            return "Entry denied: citizen of banned nation.";
+        }
+
 
 
         return respuestaFinal;
