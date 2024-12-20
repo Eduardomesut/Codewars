@@ -21,7 +21,7 @@ public class Inspector {
     private ArrayList<String> documentosPedidos = new ArrayList<>();
 
     //CADUCIDAD
-    String dateStr = "1933.11.28";
+    String dateStr = "1982.11.22";
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
     LocalDate caducidad = LocalDate.parse(dateStr, formatter);
     //RESPUESTA
@@ -59,9 +59,9 @@ public class Inspector {
 
             }
         }
-        System.out.println(this.getBuscados());
+        //System.out.println(this.getBuscados());
         System.out.println(this.getDocumentosPedidos());
-        System.out.println(this.getPaisesPermitidos());
+        //System.out.println(this.getPaisesPermitidos());
     }
 
     private void documentacionNecesaria(String ley) {
@@ -172,8 +172,15 @@ public class Inspector {
             }
 
         }
-        System.out.println(documentosUsuario);
+        //System.out.println(documentosUsuario);
+        if (respuestaFinal.equals("Pass")){
+         if (verificado.nacion.equals("Arstotzka")){
+             respuestaFinal = respuesta.entradaGloriosa;
+         }else {
+             respuestaFinal = respuesta.entrada;
+         }
 
+        }
         return respuestaFinal;
     }
 
@@ -225,7 +232,7 @@ public class Inspector {
             if (verificado.id == null) {
                 verificado.id = value.substring(value.indexOf("ID#:") + 5, value.indexOf("ID#:") + 16);
             }else{
-                System.out.println(value.substring(value.indexOf("ID#:") + 5, value.indexOf("ID#:") + 16));
+                //System.out.println(value.substring(value.indexOf("ID#:") + 5, value.indexOf("ID#:") + 16));
                 if (!(value.substring(value.indexOf("ID#:") + 5, value.indexOf("ID#:") + 16).equals(verificado.id))) {
                     return respuesta.detenerID;
                 }
@@ -263,17 +270,29 @@ public class Inspector {
                 }
             }
         }
-        System.out.println(verificado.id);
-        System.out.println(verificado.nacion);
-        System.out.println(verificado.name);
-        return "";
+
+        if (value.contains("EXP:")){
+
+            String fecha = value.substring(value.indexOf("EXP:") + 5, value.indexOf("EXP:") + 15);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+            LocalDate fechaC = LocalDate.parse(fecha, formatter);
+            if (this.caducidad.isAfter(fechaC)){
+
+                return respuesta.pasaporteCaducado;
+            }
+
+        }
+        //System.out.println(verificado.id);
+        //System.out.println(verificado.nacion);
+        //System.out.println(verificado.name);
+        return "Pass";
     }
 
     class Respuesta {
 
         private String entrada = "Cause no trouble.";
         private String entradaGloriosa = "Glory to Arstotzka.";
-        private String noPasaporte = "Entry denied: passport expired.";
+        private String pasaporteCaducado = "Entry denied: passport expired.";
         private String noVacuna = "Entry denied: missing required vaccination.";
         private String noPermisoAcceso = "Entry denied: missing required access permit.";
         private String detenerID = "Detainment: ID number mismatch.";
