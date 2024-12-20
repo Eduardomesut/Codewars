@@ -8,6 +8,8 @@ package ejercicioslvl3.papersPlease;
  *
  * @author tarde
  */
+import com.sun.jdi.Value;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -29,9 +31,6 @@ public class Inspector {
 
     //PAISES
     ArrayList<String> todosPaises = new ArrayList<>();
-
-
-
 
 
     public void receiveBulletin(String bulletin) {
@@ -60,7 +59,7 @@ public class Inspector {
             }
         }
         //System.out.println(this.getBuscados());
-        System.out.println(this.getDocumentosPedidos());
+        //System.out.println(this.getDocumentosPedidos());
         //System.out.println(this.getPaisesPermitidos());
     }
 
@@ -74,7 +73,7 @@ public class Inspector {
                 paises = textoPais.split(", ");
                 String[] texto = paises[paises.length - 1].split(" ");
                 String pais = texto[0];
-                String pedido = texto[2] + texto[3];
+                String pedido = texto[2] +"_"+ texto[3];
 
                 for (int i = 0; i < paises.length; i++) {
                     if (i == paises.length - 1) {
@@ -91,7 +90,7 @@ public class Inspector {
                 paises = textoPais.split(" ");
                 if (textoPais.contains("require")) {
 
-                    this.getDocumentosPedidos().add(paises[0] + ":" + paises[2] + paises[3]);
+                    this.getDocumentosPedidos().add(paises[0] + ":" + paises[2] +"_" + paises[3]);
                 }
             }
 
@@ -104,7 +103,7 @@ public class Inspector {
                     //Quitar requerimiento
 
                 } else if (ley.contains(" require ")) {
-                    this.getDocumentosPedidos().add("Foreigners:" + required[2] + required[3]);
+                    this.getDocumentosPedidos().add("Foreigners:" + required[2] +"_" + required[3]);
                 }
 
             }
@@ -118,7 +117,7 @@ public class Inspector {
                     //Quitar requerimiento
 
                 } else if (ley.contains(" require ")) {
-                    this.getDocumentosPedidos().add("Workers:" + required[2] + required[3]);
+                    this.getDocumentosPedidos().add("Workers:" + required[2] +"_" + required[3]);
                 }
 
             }
@@ -132,7 +131,7 @@ public class Inspector {
                     //Quitar requerimiento
 
                 } else if (ley.contains(" require ")) {
-                    this.getDocumentosPedidos().add("Entrants:" + required[2] + required[3]);
+                    this.getDocumentosPedidos().add("Entrants:" + required[2] +"_" + required[3]);
                 }
 
             }
@@ -154,13 +153,13 @@ public class Inspector {
             } else if (entry.getKey().equals("certificate_of_vaccination")) {
                 respuestaFinal = verificarDocumento(entry.getValue(), verificado);
 
-            } else if (entry.getKey().equals("idCard")) {
+            } else if (entry.getKey().equals("ID_card")) {
 
                 respuestaFinal = verificarDocumento(entry.getValue(), verificado);
-            } else if (entry.getKey().equals("accessPermit")) {
+            } else if (entry.getKey().equals("access_permit")) {
 
                 respuestaFinal = verificarDocumento(entry.getValue(), verificado);
-            } else if (entry.getKey().equals("workPass")) {
+            } else if (entry.getKey().equals("work_pass")) {
                 respuestaFinal = verificarDocumento(entry.getValue(), verificado);
 
             } else if (entry.getKey().equals("grant_of_asylum")) {
@@ -170,8 +169,15 @@ public class Inspector {
                 respuestaFinal = verificarDocumento(entry.getValue(), verificado);
 
             }
+            verificado.documentosUsuario.add(entry.getKey());
 
         }
+
+        verificado.documentosNecesarios = verDocumentosNecesarios(verificado.nacion, verificado.esTrabajador);
+
+
+
+
         //System.out.println(documentosUsuario);
         if (respuestaFinal.equals("Pass")){
          if (verificado.nacion.equals("Arstotzka")){
@@ -181,7 +187,56 @@ public class Inspector {
          }
 
         }
+        //System.out.println(verificado.documentosUsuario);
+        //System.out.println(verificado.documentosNecesarios);
+        if (comparador(verificado.documentosUsuario, verificado.documentosNecesarios).startsWith("Entry denied")){
+            respuestaFinal = comparador(verificado.documentosUsuario, verificado.documentosNecesarios);
+
+        }
+
+        if (verificado.nacion.equals("Arstotzka") && verificado.documentosUsuario.contains("ID_card")) {
+            respuestaFinal = respuesta.entradaGloriosa;
+        }
+
+
         return respuestaFinal;
+    }
+
+    private String comparador(ArrayList<String> documentosUsuario, ArrayList<String> documentosNecesarios) {
+        int documentosComprobados = 0;
+        int documentosTotales = documentosNecesarios.size();
+        ArrayList<String> docuBuenos = new ArrayList<>();
+
+        for (String nec:documentosNecesarios) {
+            if (!documentosUsuario.contains(nec)){
+                return "Entry denied: missing required " + nec + ".";
+            }else {
+                documentosComprobados ++;
+            }
+        }
+
+        return "Bien";
+    }
+
+    private ArrayList<String> verDocumentosNecesarios(String nacion, boolean esTrabajador) {
+        ArrayList<String> documentos= new ArrayList<>();
+        for (String pais:this.documentosPedidos) {
+            
+            if (pais.startsWith(nacion)){
+                documentos.add(pais.substring(pais.indexOf(":")+1));
+            }
+            if (pais.startsWith("Entrants")){
+                documentos.add(pais.substring(pais.indexOf(":")+1));
+            }
+            if (pais.startsWith("Foreigners") && !nacion.equals("Arstotzka")){
+                documentos.add(pais.substring(pais.indexOf(":")+1));
+            }
+            if (pais.startsWith("Workers") && esTrabajador){
+                documentos.add(pais.substring(pais.indexOf(":")+1));
+            }
+
+        }
+        return documentos;
     }
 
     public ArrayList<String> getPaisesPermitidos() {
@@ -301,6 +356,7 @@ public class Inspector {
 
     class Persona {
 
+        public boolean esTrabajador = false;
         //PARA TODOS
         private String passport;
         private String certificate_of_vaccination;
@@ -317,6 +373,10 @@ public class Inspector {
         private String id;
         private LocalDate fecha;
         private String nacion;
+
+        //DOCUMENTACION
+        private ArrayList<String> documentosUsuario = new ArrayList<>();
+        private ArrayList<String> documentosNecesarios = new ArrayList<>();
 
         public String getPassport() {
             return passport;
@@ -414,5 +474,20 @@ public class Inspector {
             this.nacion = nacion;
         }
 
+        public ArrayList<String> getDocumentosUsuario() {
+            return documentosUsuario;
+        }
+
+        public void setDocumentosUsuario(ArrayList<String> documentosUsuario) {
+            this.documentosUsuario = documentosUsuario;
+        }
+
+        public ArrayList<String> getDocumentosNecesarios() {
+            return documentosNecesarios;
+        }
+
+        public void setDocumentosNecesarios(ArrayList<String> documentosNecesarios) {
+            this.documentosNecesarios = documentosNecesarios;
+        }
     }
 }
