@@ -8,7 +8,6 @@ package ejercicioslvl3.papersPlease;
  *
  * @author tarde
  */
-import com.sun.jdi.Value;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -185,29 +184,19 @@ public class Inspector {
         llenarPaises();
         Persona verificado = new Persona();
         String respuestaFinal = "";
+        boolean sustitutoAcceso = false;
+        ArrayList<String> fallos = new ArrayList<>();
         for (Map.Entry<String, String> entry : person.entrySet()) {
             documentosUsuario.add(entry.getKey());
-            if (entry.getKey().equals("passport")) {
-                respuestaFinal = verificarDocumento(entry.getValue(), verificado);
 
-            } else if (entry.getKey().equals("certificate_of_vaccination")) {
-                respuestaFinal = verificarDocumento(entry.getValue(), verificado);
 
-            } else if (entry.getKey().equals("ID_card")) {
+            respuestaFinal = verificarDocumento(entry.getValue(), verificado, entry.getKey());
+            if (!respuestaFinal.equals("Pass")){
+                fallos.add(respuestaFinal);
+            }
 
-                respuestaFinal = verificarDocumento(entry.getValue(), verificado);
-            } else if (entry.getKey().equals("access_permit")) {
-
-                respuestaFinal = verificarDocumento(entry.getValue(), verificado);
-            } else if (entry.getKey().equals("work_pass")) {
-                respuestaFinal = verificarDocumento(entry.getValue(), verificado);
-
-            } else if (entry.getKey().equals("grant_of_asylum")) {
-
-                respuestaFinal = verificarDocumento(entry.getValue(), verificado);
-            } else if (entry.getKey().equals("diplomatic_authorization")) {
-                respuestaFinal = verificarDocumento(entry.getValue(), verificado);
-
+            if (entry.getKey().equals("grant_of_asylum") || entry.getKey().equals("diplomatic_authorization")){
+                verificado.documentosUsuario.add("access_permit");
             }
             verificado.documentosUsuario.add(entry.getKey());
 
@@ -255,6 +244,9 @@ public class Inspector {
         if (!paisesPermitidos.contains(verificado.nacion)){
             return "Entry denied: citizen of banned nation.";
         }
+        if (fallos.size() > 0){
+            return fallos.get(0);
+        }
 
         return respuestaFinal;
     }
@@ -268,7 +260,7 @@ public class Inspector {
             if (!documentosUsuario.contains(nec)){
                 if (nec.length() > 1){
                     nec = nec.replace("_", " ");
-                    System.out.println(nec);
+
                 }
                 return "Entry denied: missing required " + nec + ".";
             }else {
@@ -342,7 +334,7 @@ public class Inspector {
         todosPaises.add("United Federation");
     }
 
-    public String verificarDocumento(String value, Persona verificado) {
+    public String verificarDocumento(String value, Persona verificado, String key) {
         
         if (value.contains("ID#:")) {
             if (verificado.id == null) {
@@ -366,7 +358,7 @@ public class Inspector {
                 for (String pais: todosPaises) {
                     if (value.contains(pais)){
                         if (!pais.equals(verificado.nacion)){
-                            return respuesta.detenerID;
+                            return "Detainment: nationality mismatch.";
                         }
                     }
                 }
@@ -382,7 +374,7 @@ public class Inspector {
                 verificado.name = nombre;
             }else {
                 if (!verificado.name.equals(nombre)){
-                    return respuesta.detenerID;
+                    return "Entry denied: " + value +" expired.";
                 }
             }
         }
@@ -392,9 +384,14 @@ public class Inspector {
             String fecha = value.substring(value.indexOf("EXP:") + 5, value.indexOf("EXP:") + 15);
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
             LocalDate fechaC = LocalDate.parse(fecha, formatter);
-            if (this.caducidad.isAfter(fechaC)){
 
-                return respuesta.pasaporteCaducado;
+            if (fechaC.isBefore(this.caducidad)){
+                String docu = key;
+                if (key.contains("_")){
+                    docu = key.replace("_", " ");
+                }
+
+                return "Entry denied: " + docu +" expired.";
             }
 
         }
