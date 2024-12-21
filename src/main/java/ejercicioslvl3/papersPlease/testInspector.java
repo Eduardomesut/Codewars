@@ -9,7 +9,7 @@ public class testInspector {
     public static void main(String[] args) {
         Inspector inspector = new Inspector();
         inspector.receiveBulletin("Entrants require passport\nAllow citizens of Arstotzka, Obristan\nCitizens of Antegria, Republia, Obristan require polio vaccination\nWanted by the State: Hubert Popovic\n"
-                + "Foreigners require access permit\nDeny citizens of Kolechia, Republia");
+                + "Foreigners require access permit\nDeny citizens of Kolechia, Republia\nWanted by the State: Hubert Popovic");
         Map<String, String> josef = new HashMap<>();
         josef.put("passport", "ID#: GC07D-FU8AR\nNATION: Arstotzka\nNAME: Costanza, Josef\nDOB: 1933.11.28\nSEX: M\nISS: East Grestin\nEXP: 1983.03.15");
         System.out.println(inspector.inspect(josef));
@@ -22,7 +22,7 @@ public class testInspector {
 
         Map<String, String> guyovich = new HashMap<>();
 
-        guyovich.put("access_permit", "NAME: Guyovich, Russian\nNATION: Obristan\nID#: TE8M1-V3N7R\nPURPOSE: TRANSIT\nDURATION: 14 DAYS\nHEIGHT: 159cm\nWEIGHT: 60kg\nEXP: 1983.07.13");
+        guyovich.put("access_permit", "NAME: Popovic, Hubert\nNATION: Obristan\nID#: TE8M1-V3N7R\nPURPOSE: TRANSIT\nDURATION: 14 DAYS\nHEIGHT: 159cm\nWEIGHT: 60kg\nEXP: 1983.07.13");
         System.out.println(inspector.inspect(guyovich));
 
         String bulletin = "Entrants require passport\n" +

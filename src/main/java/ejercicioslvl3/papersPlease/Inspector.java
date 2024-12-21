@@ -23,7 +23,7 @@ public class Inspector {
     private ArrayList<String> documentosPedidos = new ArrayList<>();
 
     //CADUCIDAD
-    String dateStr = "1982.11.22";
+    String dateStr = "1982.11.23";
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
     LocalDate caducidad = LocalDate.parse(dateStr, formatter);
     //RESPUESTA
@@ -215,9 +215,6 @@ public class Inspector {
 
         verificado.documentosNecesarios = verDocumentosNecesarios(verificado.nacion, verificado.esTrabajador);
 
-
-
-
         //System.out.println(documentosUsuario);
         if (respuestaFinal.equals("Pass")){
          if (verificado.nacion.equals("Arstotzka")){
@@ -237,8 +234,16 @@ public class Inspector {
         if (verificado.nacion.equals("Arstotzka") && verificado.documentosUsuario.contains("ID_card")) {
             respuestaFinal = respuesta.entradaGloriosa;
         }
-        if (this.getBuscados().contains(verificado.name)){
+
+        String nombreApellido;
+        String []completo = verificado.name.split(", ");
+        nombreApellido = completo[1] + " " + completo[0];
+
+        if (this.getBuscados().contains(nombreApellido)){
             return respuesta.detenerCriminal;
+        }
+        if (respuestaFinal.startsWith("Detainment:")){
+            return  respuestaFinal;
         }
 
         for (String pais:paisesProhibidos) {
@@ -251,8 +256,6 @@ public class Inspector {
             return "Entry denied: citizen of banned nation.";
         }
 
-
-
         return respuestaFinal;
     }
 
@@ -263,6 +266,10 @@ public class Inspector {
 
         for (String nec:documentosNecesarios) {
             if (!documentosUsuario.contains(nec)){
+                if (nec.length() > 1){
+                    nec = nec.replace("_", " ");
+                    System.out.println(nec);
+                }
                 return "Entry denied: missing required " + nec + ".";
             }else {
                 documentosComprobados ++;
@@ -409,7 +416,6 @@ public class Inspector {
     }
 
     class Persona {
-
         public boolean esTrabajador = false;
         //PARA TODOS
         private String passport;
