@@ -34,13 +34,36 @@ public class Dinglemouse {
         //Intentar hacer con programación funcional
         horizontal = validateHorizontal(grid);
         vertical = validateVertical(grid);
+        if (horizontal) {
+            System.out.println("Horizontal correcto");
+        }else {
+            System.out.println("horizontal incorrecto");
+        }
+        if (vertical) {
+            System.out.println("Vertical correcto");
+        }else {
+            System.out.println("vertical incorrecto");
+        }
         // Your code here
-        System.out.println(grid.length + " " + grid[0].length);
+       // System.out.println(grid.length + " " + grid[0].length);
         return false;
     }
 
     private static boolean validateHorizontal(final char [][] grid) {
-        return false;
+        for (int i = 0; i < grid.length; i++) {
+            System.out.println();
+            for (int j = 0; j < grid[i].length; j++) {
+                System.out.print(grid[i][j]);
+                if(grid[i][j] == '-'){
+                    if (j == grid[i].length - 1 || j == 0) {
+                        return false;
+                    }
+
+                }
+            }
+        }
+        System.out.println();
+        return true;
     }
     private static boolean validateVertical(final char [][] grid) {
         return false;
