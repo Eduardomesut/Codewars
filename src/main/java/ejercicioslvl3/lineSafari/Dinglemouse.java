@@ -54,11 +54,30 @@ public class Dinglemouse {
             System.out.println();
             for (int j = 0; j < grid[i].length; j++) {
                 System.out.print(grid[i][j]);
+                //Si el horizontal es -
                 if(grid[i][j] == '-'){
                     if (j == grid[i].length - 1 || j == 0) {
                         return false;
+                    }else {
+                        if (grid[i][j-1] == '|' || grid[i][j+1] == '|') {
+                            return false;
+                        }
+                        if (grid[i][j-1] == ' ' && grid[i][j+1] == ' ') {
+                            return false;
+                        }
+                        return true;
                     }
 
+                } else if (grid[i][j] == '|') {
+                    if (j == grid[i].length - 1) {
+                        if (grid[i][j-1] != ' ') {
+                            return false;
+                        }
+                    } else if (j == 0) {
+                        if (grid[i][j+1] != ' ') {
+                            return false;
+                        }
+                    }
                 }
             }
         }
