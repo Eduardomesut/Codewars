@@ -15,10 +15,10 @@ public class Dinglemouse {
     public static void main(String[] args) {
         char[][] grid = {
                 {' ', ' ', ' ', ' ', ' '},
-                {' ', ' ', 'X', ' ', ' '},
-                {' ', ' ', '|', ' ', ' '},
-                {' ', ' ', '|', ' ', ' '},
-                {' ', ' ', 'X', ' ', ' '}
+                {' ', 'X', '-', '-', '+'},
+                {' ', ' ', ' ', ' ', 'X'},
+                {' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' '}
         };
         Dinglemouse.line(grid);
 
@@ -50,6 +50,8 @@ public class Dinglemouse {
     }
 
     private static boolean validateHorizontal(final char [][] grid) {
+        //Aquí tengo el validador de X para comprobar que sean 2
+        int contadorX = 0;
         for (int i = 0; i < grid.length; i++) {
             System.out.println();
             for (int j = 0; j < grid[i].length; j++) {
@@ -62,10 +64,10 @@ public class Dinglemouse {
                         if (grid[i][j-1] == '|' || grid[i][j+1] == '|') {
                             return false;
                         }
-                        if (grid[i][j-1] == ' ' && grid[i][j+1] == ' ') {
+                        if (grid[i][j-1] == ' ' || grid[i][j+1] == ' ') {
                             return false;
                         }
-                        return true;
+
                     }
 
                 } else if (grid[i][j] == '|') {
@@ -78,12 +80,20 @@ public class Dinglemouse {
                             return false;
                         }
                     }
+                } else if (grid[i][j] == 'X') {
+                    contadorX ++;
                 }
+
             }
+        }
+        if (contadorX != 2){
+            return false;
         }
         System.out.println();
         return true;
     }
+
+    //Hacer un buble contrario recorriendo los verticales y validando el de arriba y el de abajo y los corners
     private static boolean validateVertical(final char [][] grid) {
         return false;
     }
