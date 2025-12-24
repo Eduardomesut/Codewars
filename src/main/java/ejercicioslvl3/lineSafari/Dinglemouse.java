@@ -14,11 +14,11 @@ public class Dinglemouse {
 
     public static void main(String[] args) {
         char[][] grid = {
-                {' ', ' ', ' ', ' ', ' '},
+                {'+', '-', '-', '-', '+'},
                 {' ', 'X', '-', '-', '+'},
-                {' ', ' ', ' ', ' ', 'X'},
-                {' ', ' ', ' ', ' ', ' '},
-                {' ', ' ', ' ', ' ', ' '}
+                {' ', ' ', '+', ' ', 'X'},
+                {' ', ' ', '|', ' ', ' '},
+                {' ', ' ', '+', ' ', ' '}
         };
         Dinglemouse.line(grid);
 
@@ -72,16 +72,27 @@ public class Dinglemouse {
 
                 } else if (grid[i][j] == '|') {
                     if (j == grid[i].length - 1) {
-                        if (grid[i][j-1] != ' ') {
+                        if (grid[i][j-1] == '-') {
                             return false;
                         }
                     } else if (j == 0) {
-                        if (grid[i][j+1] != ' ') {
+                        if (grid[i][j+1] == '-') {
                             return false;
                         }
                     }
+
+                    //intentar hacerlo por mi cuebnta con ifs
+                    char arriba = (i > 0) ? grid[i - 1][j] : ' ';
+                    char abajo  = (i < grid.length - 1) ? grid[i + 1][j] : ' ';
+
+                    if (arriba == '-' || abajo == '-' || arriba == ' ' || abajo == ' ') {
+                        System.out.println("Error arriba o abajo");
+                        return false;
+                    }
                 } else if (grid[i][j] == 'X') {
                     contadorX ++;
+                } else if (grid[i][j] == '+') {
+                    //TODO
                 }
 
             }
