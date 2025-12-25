@@ -14,11 +14,11 @@ public class Dinglemouse {
 
     public static void main(String[] args) {
         char[][] grid = {
-                {'+', '-', '-', '-', '+'},
-                {' ', 'X', '-', '-', '+'},
-                {' ', ' ', '+', ' ', 'X'},
-                {' ', ' ', '|', ' ', ' '},
-                {' ', ' ', '+', ' ', ' '}
+                {' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' '},
+                {' ', 'X', '-', '+', ' '},
+                {' ', ' ', ' ', '|', ' '},
+                {' ', 'X', '-', '+', ' '}
         };
         Dinglemouse.line(grid);
 
@@ -59,12 +59,15 @@ public class Dinglemouse {
                 //Si el horizontal es -
                 if(grid[i][j] == '-'){
                     if (j == grid[i].length - 1 || j == 0) {
+                        System.out.println("error 1");
                         return false;
                     }else {
                         if (grid[i][j-1] == '|' || grid[i][j+1] == '|') {
+                            System.out.println("error 2");
                             return false;
                         }
                         if (grid[i][j-1] == ' ' || grid[i][j+1] == ' ') {
+                            System.out.println("error 3");
                             return false;
                         }
 
@@ -73,10 +76,12 @@ public class Dinglemouse {
                 } else if (grid[i][j] == '|') {
                     if (j == grid[i].length - 1) {
                         if (grid[i][j-1] == '-') {
+                            System.out.println("error 4");
                             return false;
                         }
                     } else if (j == 0) {
                         if (grid[i][j+1] == '-') {
+                            System.out.println("error 5");
                             return false;
                         }
                     }
@@ -87,12 +92,40 @@ public class Dinglemouse {
 
                     if (arriba == '-' || abajo == '-' || arriba == ' ' || abajo == ' ') {
                         System.out.println("Error arriba o abajo");
+                        System.out.println("Error arriba o abajo");
                         return false;
                     }
                 } else if (grid[i][j] == 'X') {
                     contadorX ++;
                 } else if (grid[i][j] == '+') {
                     //TODO
+                    //Ultima fila
+
+                    if (i == grid.length - 1) {
+                        System.out.println(grid[i-1][j]);
+                        //Primera y última posicion de la ultima fila
+                        if (j == grid[i].length - 1) {
+
+                        }else if (j == 0){
+
+                        }else {
+                            if ((grid[i][j+1] != '-' && grid[i][j+1] != 'X' &&  grid[i][j-1] != '-' && grid[i][j-1] != 'X') || grid[i-1][j] != '|' && grid[i-1][j] != '+' && grid[i-1][j] != 'X') {
+                                System.out.println("Error 6");
+                                System.out.println(grid[i][j-1]);
+                                return false;
+                            }
+                        }
+
+
+                    } else if (i == 0) {
+
+                    }else if (j == grid[i].length - 1) {
+
+                    }else if (j == 0) {
+
+                    }else {
+
+                    }
                 }
 
             }
