@@ -17,7 +17,7 @@ public class Dinglemouse {
                 {' ', ' ', ' ', ' ', ' '},
                 {' ', ' ', ' ', ' ', ' '},
                 {' ', 'X', '-', '+', ' '},
-                {' ', ' ', ' ', '|', ' '},
+                {' ', ' ', ' ', '+', ' '},
                 {' ', 'X', '-', '+', ' '}
         };
         Dinglemouse.line(grid);
@@ -105,25 +105,31 @@ public class Dinglemouse {
                         System.out.println(grid[i-1][j]);
                         //Primera y última posicion de la ultima fila
                         if (j == grid[i].length - 1) {
-
+                            if ((grid[i][j-1] != '-' && grid[i][j-1] != 'X' && grid[i][j-1] != '+') || grid[i-1][j] != '|' && grid[i-1][j] != '+' && grid[i-1][j] != 'X'){
+                                return false;
+                            }
                         }else if (j == 0){
+                            if ((grid[i][j+1] != '-' && grid[i][j+1] != 'X' && grid[i][j+1] != '+') || grid[i-1][j] != '|' && grid[i-1][j] != '+' && grid[i-1][j] != 'X'){
+                                return false;
+                            }
 
                         }else {
-                            if ((grid[i][j+1] != '-' && grid[i][j+1] != 'X' &&  grid[i][j-1] != '-' && grid[i][j-1] != 'X') || grid[i-1][j] != '|' && grid[i-1][j] != '+' && grid[i-1][j] != 'X') {
+                            if ((grid[i][j+1] != '-' && grid[i][j+1] != 'X' && grid[i][j+1] != '+' &&  grid[i][j-1] != '-' && grid[i][j-1] != 'X' && grid[i][j-1] != '+') || grid[i-1][j] != '|' && grid[i-1][j] != '+' && grid[i-1][j] != 'X') {
                                 System.out.println("Error 6");
                                 System.out.println(grid[i][j-1]);
                                 return false;
                             }
                         }
 
-
+                    //Primera fila
                     } else if (i == 0) {
-
+                    //Ultima columna
                     }else if (j == grid[i].length - 1) {
-
+                    //Primera columna
                     }else if (j == 0) {
 
                     }else {
+                        //Creo que para los normales el validador sería que cuando hay un + en alguna de los subyacentes este el -,| o X, aparte de estar con otra + necesita pasar por un - o |
 
                     }
                 }
