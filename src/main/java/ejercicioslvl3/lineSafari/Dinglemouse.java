@@ -14,9 +14,9 @@ public class Dinglemouse {
 
     public static void main(String[] args) {
         char[][] grid = {
-                {' ', ' ', ' ', ' ', ' '},
-                {' ', ' ', ' ', ' ', ' '},
                 {' ', 'X', '-', '+', ' '},
+                {' ', ' ', ' ', '+', ' '},
+                {' ', ' ', ' ', '+', ' '},
                 {' ', ' ', ' ', '+', ' '},
                 {' ', 'X', '-', '+', ' '}
         };
@@ -115,7 +115,7 @@ public class Dinglemouse {
 
                         }else {
                             if ((grid[i][j+1] != '-' && grid[i][j+1] != 'X' && grid[i][j+1] != '+' &&  grid[i][j-1] != '-' && grid[i][j-1] != 'X' && grid[i][j-1] != '+') || grid[i-1][j] != '|' && grid[i-1][j] != '+' && grid[i-1][j] != 'X') {
-                                System.out.println("Error 6");
+                                System.out.println("Error 5");
                                 System.out.println(grid[i][j-1]);
                                 return false;
                             }
@@ -123,6 +123,23 @@ public class Dinglemouse {
 
                     //Primera fila
                     } else if (i == 0) {
+                        if (j == grid[i].length - 1) {
+                            if ((grid[i][j-1] != '-' && grid[i][j-1] != 'X' && grid[i][j-1] != '+') || grid[i+1][j] != '|' && grid[i+1][j] != '+' && grid[i+1][j] != 'X'){
+                                return false;
+                            }
+                        }else if (j == 0){
+                            if ((grid[i][j+1] != '-' && grid[i][j+1] != 'X' && grid[i][j+1] != '+') || grid[i+1][j] != '|' && grid[i+1][j] != '+' && grid[i+1][j] != 'X'){
+                                return false;
+                            }
+
+                        }else {
+                            if ((grid[i][j+1] != '-' && grid[i][j+1] != 'X' && grid[i][j+1] != '+' &&  grid[i][j-1] != '-' && grid[i][j-1] != 'X' && grid[i][j-1] != '+') || grid[i+1][j] != '|' && grid[i+1][j] != '+' && grid[i+1][j] != 'X') {
+                                System.out.println("Error 6");
+                                System.out.println(grid[i][j]);
+                                System.out.println(grid[i][j-1]);
+                                return false;
+                            }
+                        }
                     //Ultima columna
                     }else if (j == grid[i].length - 1) {
                     //Primera columna
