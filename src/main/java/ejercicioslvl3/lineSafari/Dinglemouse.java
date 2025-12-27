@@ -14,13 +14,14 @@ public class Dinglemouse {
 
     public static void main(String[] args) {
         char[][] grid = {
-                {' ', 'X', '-', '+', ' '},
-                {' ', ' ', ' ', '+', ' '},
-                {' ', ' ', ' ', '+', ' '},
-                {' ', ' ', ' ', '+', ' '},
-                {' ', 'X', '-', '+', ' '}
+                {'X', '-', 'X', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' '}
         };
-        Dinglemouse.line(grid);
+
+        System.out.println(Dinglemouse.line(grid));
 
 
     }
@@ -32,25 +33,14 @@ public class Dinglemouse {
         boolean vertical;
         //Hacer validaciones simples y luego seguir con las complejas
         //Intentar hacer con programación funcional
-        horizontal = validateHorizontal(grid);
-        vertical = validateVertical(grid);
-        if (horizontal) {
-            System.out.println("Horizontal correcto");
-        }else {
-            System.out.println("horizontal incorrecto");
-        }
-        if (vertical) {
-            System.out.println("Vertical correcto");
-        }else {
-            System.out.println("vertical incorrecto");
-        }
-        // Your code here
-       // System.out.println(grid.length + " " + grid[0].length);
-        return false;
+
+        return validateHorizontal(grid);
     }
 
     private static boolean validateHorizontal(final char [][] grid) {
         //Aquí tengo el validador de X para comprobar que sean 2
+
+
         int contadorX = 0;
         for (int i = 0; i < grid.length; i++) {
             System.out.println();
@@ -95,7 +85,67 @@ public class Dinglemouse {
                         System.out.println("Error arriba o abajo");
                         return false;
                     }
+
+                    //ESTO NO ESTA DEL TODO BIEN FALTAN CORREGIR COSAS
                 } else if (grid[i][j] == 'X') {
+                    if (i == grid.length - 1) {
+                        //System.out.println(grid[i-1][j]);
+                        //Primera y última posicion de la ultima fila
+                        if (j == grid[i].length - 1) {
+                            if ((grid[i][j-1] != '-' && grid[i][j-1] != 'X' && grid[i][j-1] != '+') && grid[i-1][j] != '|' && grid[i-1][j] != '+' && grid[i-1][j] != 'X'){
+                                return false;
+                            }
+                        }else if (j == 0){
+                            if ((grid[i][j+1] != '-' && grid[i][j+1] != 'X' && grid[i][j+1] != '+') && grid[i-1][j] != '|' && grid[i-1][j] != '+' && grid[i-1][j] != 'X'){
+                                return false;
+                            }
+
+                        }else {
+                            if ((grid[i][j+1] != '-' && grid[i][j+1] != 'X' && grid[i][j+1] != '+' &&  grid[i][j-1] != '-' && grid[i][j-1] != 'X' && grid[i][j-1] != '+') && grid[i-1][j] != '|' && grid[i-1][j] != '+' && grid[i-1][j] != 'X') {
+                                System.out.println("Error 5");
+                                System.out.println(grid[i][j-1]);
+                                return false;
+                            }
+                        }
+
+                        //Primera fila
+                    } else if (i == 0) {
+                        if (j == grid[i].length - 1) {
+                            if ((grid[i][j-1] != '-' && grid[i][j-1] != 'X' && grid[i][j-1] != '+') && grid[i+1][j] != '|' && grid[i+1][j] != '+' && grid[i+1][j] != 'X'){
+                                return false;
+                            }
+                        }else if (j == 0){
+                            if ((grid[i][j+1] != '-' && grid[i][j+1] != 'X' && grid[i][j+1] != '+') && grid[i+1][j] != '|' && grid[i+1][j] != '+' && grid[i+1][j] != 'X'){
+                                return false;
+                            }
+
+                        }else {
+                            if ((grid[i][j+1] != '-' && grid[i][j+1] != 'X' && grid[i][j+1] != '+' &&  grid[i][j-1] != '-' && grid[i][j-1] != 'X' && grid[i][j-1] != '+') && grid[i+1][j] != '|' && grid[i+1][j] != '+' && grid[i+1][j] != 'X') {
+                                System.out.println("Error 6");
+                                System.out.println(grid[i][j]);
+                                System.out.println(grid[i][j-1]);
+                                return false;
+                            }
+                        }
+                        //Ultima columna
+                    }else if (j == grid[i].length - 1) {
+                        if ((grid[i][j-1] != '-' && grid[i][j-1] != 'X') && (grid[i+1][j] != '|' && grid[i+1][j] != 'X' && grid[i-1][j] != '|' && grid[i-1][j] != 'X')){
+                            return false;
+                        }
+
+                        //Primera columna
+                    }else if (j == 0) {
+                        if ((grid[i][j+1] != '-' && grid[i][j+1] != 'X') && (grid[i+1][j] != '|' && grid[i+1][j] != 'X' && grid[i-1][j] != '|' && grid[i-1][j] != 'X')){
+                            return false;
+                        }
+                    }else {
+                        //Creo que para los normales el validador sería que cuando hay un + en alguna de los subyacentes este el -,| o X, aparte de estar con otra + necesita pasar por un - o |
+                        if ((grid[i][j+1] != '-' && grid[i][j+1] != 'X' && grid [i][j+1] != '+' && grid [i][j-1] != '-' && grid [i][j-1] != 'X' && grid [i][j-1] != '+')
+                                && (grid[i+1][j] != '|' && grid[i+1][j] != 'X' && grid[i+1][j] != '+' && grid[i-1][j] != '|' && grid[i-1][j] != 'X' && grid[i-1][j] != '+')
+                                || (grid[i][j+1] == '-' && (grid[i][j-1] == '-') || (grid[i-1][j] == '|') && (grid[i+1][j] == '|'))) {
+                            return false;
+                        }
+                    }
                     contadorX ++;
                 } else if (grid[i][j] == '+') {
                     //TODO
@@ -142,12 +192,21 @@ public class Dinglemouse {
                         }
                     //Ultima columna
                     }else if (j == grid[i].length - 1) {
+                    return false;
+
+
+
                     //Primera columna
                     }else if (j == 0) {
+                        return false;
 
                     }else {
                         //Creo que para los normales el validador sería que cuando hay un + en alguna de los subyacentes este el -,| o X, aparte de estar con otra + necesita pasar por un - o |
-
+                        if ((grid[i][j+1] != '-' && grid[i][j+1] != 'X' && grid [i][j+1] != '+' && grid [i][j-1] != '-' && grid [i][j-1] != 'X' && grid [i][j-1] != '+')
+                                || (grid[i+1][j] != '|' && grid[i+1][j] != 'X' && grid[i+1][j] != '+' && grid[i-1][j] != '|' && grid[i-1][j] != 'X' && grid[i-1][j] != '+')
+                                || (grid[i][j+1] == '-' && (grid[i][j-1] == '-') || (grid[i-1][j] == '|') && (grid[i+1][j] == '|'))) {
+                            return false;
+                        }
                     }
                 }
 
