@@ -207,6 +207,10 @@ public class Dinglemouse {
                                 || (grid[i][j+1] == '-' && (grid[i][j-1] == '-') || (grid[i-1][j] == '|') && (grid[i+1][j] == '|'))) {
                             return false;
                         }
+                        if (grid[i-1][j-1] == '+' && grid[i][j-1] == '+' && grid[i-1][j] == '+' && grid[i][j+1] == '+' && grid[i+1][j] == '+' && grid[i +1][j+1] == '+'
+                        && grid[i-1][j+1] == '+' && grid[i+1][j-1] == '+'){
+                            return false;
+                        }
                     }
                 }
 
